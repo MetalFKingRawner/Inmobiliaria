@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Venta</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Open+Sans&display=swap" rel="stylesheet"> 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-etc-etc" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+
+    <style>
+        .btn-wsp {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #25d366;
+            color: white;
+            padding: 10px;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            text-align: center;
+            font-size: 24px;
+        }
+
+        .btn-wsp:hover {
+            background-color: #20c658;
+        }
+
+        .search-container {
+            text-align: center;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            max-width: 600px;
+        }
+
+        .search-container p {
+            font-size: 30px;
+            margin: 0 0 20px;
+            line-height: 1.5;
+        }
+
+        .search-container input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .search-container input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-container button {
+            background-color: #4caf50;
+            color: #000000;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 10%;  /* Change width to 50% */
+            font-size: 16px;
+            margin: 10px auto;  /* Center the button horizontally */
+        }
+
+        .search-container button:hover {
+            background-color: #45a049;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="menu-horizontal">
+            <li><a href="{% url 'index' %}">INICIO</a></li>
+            <li>
+                <a href="#">CASAS</a>
+                <ul class="menu-vertical">
+                    <li><a href="{% url 'ventacasa' %}">VENTA</a></li>
+                </ul>
+            </li>    
+            <li>
+                <a href="#">TERRENOS</a>
+                <ul class="menu-vertical">
+                    <li><a href="{% url 'ventaterr' %}">VENTA</a></li>
+                </ul>
+            </li>
+            <li><a href="{% url 'formulario' %}">CONTACTANOS</a></li>
+        </ul>
+    </nav>
+    <a href="https://api.whatsapp.com/send?phone=+51987654321" class="btn-wsp" target="_blank">
+        <i class="fa fa-whatsapp icono"></i>
+    </a>
+
+    <div class="search-container">
+        <p>Busca tu nuevo patrimonio</p>
+        <input type="checkbox" id="chkUbicacion" onchange="toggleUbicacionInput()"> Buscar por ubicación
+        <div id="ubicacionInputs" class="hidden">
+            <input type="text" name="colonia" id="colonia" placeholder="Colonia">
+            <input type="text" name="ciudad" id="ciudad" placeholder="Ciudad">
+        </div>
+        <input type="checkbox" id="chkPrecio" onchange="togglePrecioInput()"> Buscar por precio
+        <div id="precioInput" class="hidden">
+            <input type="text" name="precio" id="precio" placeholder="Precio">
+        </div>
+        <button id="buscador" onclick="filterProperties()">Buscar</button>
+    </div>
+
+    <div id="filteredProperties">
+        {% for terreno in terrenos %}
+        <div class="item">
+            <figure>
+                <a href="{% url 'detalle_terreno' terreno.id %}">
+                    <img src="{{ terreno.imagen_url2 }}" alt="Imagen de la propiedad">
+                </a>
+            </figure>
+            <div class="info-product">
+                <h2 class="Dirección">Calle: {{ terreno.calle2 }}</h2>
+                <h3 class="Colonia">Colonia: {{ terreno.colonia2 }}</h2>
+                <h4 class="Ciudad">Ciudad: {{ terreno.ciudad2 }}</h3>
+                <h5 class="Estado">Estado: {{ terreno.estado2 }}</h4>
+                <h5 class="País">País: {{ terreno.pais2 }}</h5>
+                <h5 class="Ciudad">Descripcion: {{ terreno.descripcion2 }}</h5>
+                <p class="price">${{ terreno.precio2 }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <footer style=" color: #000000; text-align: center; padding: 10px;">
+        <p>&copy; 2023 HOME Asesores Inmobiliarios. Todos los derechos reservados.</p>
+    </footer>
+
+    <script src="{% static 'js/app.js' %}"></script>
+    <script>
+        function toggleUbicacionInput() {
+            const ubicacionInputs = document.getElementById('ubicacionInputs');
+            ubicacionInputs.classList.toggle('hidden');
+        }
+
+        function togglePrecioInput() {
+            const precioInput = document.getElementById('precioInput');
+            precioInput.classList.toggle('hidden');
+        }
+
+        $(function() {
+            $("#colonia").autocomplete({
+                source: "{% url 'autocomplete_colonia2' %}"
+            });
+
+            $("#ciudad").autocomplete({
+                source: "{% url 'autocomplete_ciudad2' %}"
+            });
+        });
+    </script>
+</body>
+</html>

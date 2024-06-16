@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Propiedades</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/propied.css' %}">
+</head>
+<body>
+    <h1>Listado de propiedades</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Calle</th>
+                <th>Colonia</th>
+                <th>Estado</th>
+                <th>País</th>
+                <th>Ciudad</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>Metros Cuadrados</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for propiedad in propiedades %}
+            <tr>
+                <td>{{ propiedad.calle }}</td>
+                <td>{{ propiedad.colonia }}</td>
+                <td>{{ propiedad.estado }}</td>
+                <td>{{ propiedad.pais }}</td>
+                <td>{{ propiedad.ciudad }}</td>
+                <td>{{ propiedad.descripcion }}</td>
+                <td>{{ propiedad.precio }}</td>
+                <td>{{ propiedad.metros_cuadrados }}</td>
+                <td><img class="property-image" src="{{ propiedad.imagen_url }}" alt="Imagen de la propiedad"></td>
+                <td>
+                    <button onclick="editarPropiedad('{{ propiedad.id }}')">Editar</button>
+                    <button onclick="eliminarPropiedad('{{ propiedad.id }}')">Eliminar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h1>Listado de terrenos</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Calle</th>
+                <th>Colonia</th>
+                <th>Estado</th>
+                <th>País</th>
+                <th>Ciudad</th>
+                <th>Descripcion</th>
+                <th>Precio</th>
+                <th>Metros Cuadrados</th>
+                <th>Imagen</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for terreno in terrenos %}
+            <tr>
+                <td>{{ terreno.calle2 }}</td>
+                <td>{{ terreno.colonia2 }}</td>
+                <td>{{ terreno.estado2 }}</td>
+                <td>{{ terreno.pais2 }}</td>
+                <td>{{ terreno.ciudad2 }}</td>
+                <td>{{ terreno.descripcion2 }}</td>
+                <td>{{ terreno.precio2 }}</td>
+                <td>{{ terreno.metros_cuadrados2 }}</td>
+                <td><img class="property-image" src="{{ terreno.imagen_url2 }}" alt="Imagen de la propiedad"></td>
+                <td>
+                    <button onclick="editarTerreno('{{ terreno.id }}')">Editar</button>
+                    <button onclick="eliminarTerreno('{{ terreno.id }}')">Eliminar</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="add-property-button">
+        <a href="{% url 'agregar' %}"><button>Agregar nueva propiedad</button></a>
+    </div>
+
+    <script>
+        function editarPropiedad(id) {
+            // Redireccionar a la página de edición de la propiedad con el ID correspondiente
+            window.location.href = `/editar_propiedad/${id}/`;
+        }
+
+        function eliminarPropiedad(id) {
+        // Mostrar ventana emergente de confirmación
+            if (confirm("¿Estás seguro de que quieres eliminar esta propiedad?")) {
+                // Redireccionar a la vista para eliminar la propiedad
+                window.location.href = `/eliminar_propiedad/${id}/`;
+            }
+        }
+
+        function editarTerreno(id) {
+            // Redireccionar a la página de edición de la propiedad con el ID correspondiente
+            window.location.href = `/editar_terreno/${id}/`;
+        }
+
+        function eliminarTerreno(id) {
+        // Mostrar ventana emergente de confirmación
+            if (confirm("¿Estás seguro de que quieres eliminar esta propiedad?")) {
+                // Redireccionar a la vista para eliminar la propiedad
+                window.location.href = `/eliminar_terreno/${id}/`;
+            }
+        }
+    </script>
+</body>
+</html>

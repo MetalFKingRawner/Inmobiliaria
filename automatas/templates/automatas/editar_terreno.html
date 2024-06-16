@@ -1,0 +1,175 @@
+<!-- editar_propiedad.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar terreno</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('https://finqueslaromanica.com/blog/wp-content/uploads/2023/09/inversion-inmobiliaria.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px; /* Espacio entre los campos */
+        }
+
+        .form-group > div {
+            flex: 1 1 calc(50% - 10px); /* Dos columnas con espacio entre ellas */
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        input[type="text"], input[type="number"], input[type="file"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button[type="submit"] {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .main-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border-radius: 10px;
+        }
+
+        .extra-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .extra-images-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Editar Terreno</h1>
+        <form id="formularioEditarPropiedad" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                {% for field in form %}
+                <div>
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit">Guardar Cambios</button>
+        </form>
+        {% if terreno.imagen_url2 %}
+        <img class="main-image" src="{{ terreno.imagen_url2 }}" alt="Imagen de la propiedad">
+        <h2>Imágenes Extras</h2>
+        <div class="extra-images-container">
+            {% for imagen_url2 in terreno.imagenes_urls2 %}
+            <img class="extra-image" src="{{ imagen_url2 }}" alt="Imagen extra de la propiedad">
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% load static %}
+    <script src="{% static 'js/app.js' %}"></script>
+    <script>
+        document.getElementById('formularioEditarPropiedad').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            let direccionAutomata = new direccion();
+            let paisAutomata = new pais();
+            let precioAutomata = new precio();
+            let metrosAutomata = new metros();
+
+            let calle = document.getElementById('id_calle2').value;
+            let colonia = document.getElementById('id_colonia2').value;
+            let ciudad = document.getElementById('id_ciudad2').value;
+            let estado = document.getElementById('id_estado2').value;
+            let paisvalue = document.getElementById('id_pais2').value;
+            let preciovalue = document.getElementById('id_precio2').value;
+            let metrosCuadrados = document.getElementById('id_metros_cuadrados2').value;
+
+            let errores = [];
+
+            if (!direccionAutomata.isInputValid(calle)) {
+                errores.push('Calle');
+            }
+            if (!direccionAutomata.isInputValid(colonia)) {
+                errores.push('Colonia');
+            }
+            if (!paisAutomata.isInputValid(ciudad)) {
+                errores.push('Ciudad');
+            }
+            if (!paisAutomata.isInputValid(estado)) {
+                errores.push('Estado');
+            }
+            if (!paisAutomata.isInputValid(paisvalue)) {
+                errores.push('País');
+            }
+            if (!precioAutomata.isInputValid(preciovalue)) {
+                errores.push('Precio');
+            }
+            if (!metrosAutomata.isInputValid(metrosCuadrados)) {
+                errores.push('Metros Cuadrados');
+            }
+
+            if (errores.length > 0) {
+                alert('Dato erróneo en ' + errores.join(', ') + '. Verifica la escritura.');
+            } else {
+                this.submit();
+            }
+        });
+    </script>
+</body>
+</html>
