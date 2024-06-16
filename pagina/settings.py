@@ -79,10 +79,10 @@ WSGI_APPLICATION = 'pagina.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'inmobiliaria',
-        'USER': 'postgres',
-        'PASSWORD': 'hangar81',
-        'HOST': 'localhost',  # O la dirección de tu servidor de base de datos
+        'NAME': 'inmobiliaria_inpi',
+        'USER': 'inmobiliaria_inpi_user',
+        'PASSWORD': '4dbtNiNhKmZtRMWnSjhZY2FUSUFtF48N',
+        'HOST': 'dpg-cpn97pg8fa8c73at01t0-a',  # O la dirección de tu servidor de base de datos
         'PORT': '5432',       # Puerto por defecto de PostgreSQL
     }
 }
