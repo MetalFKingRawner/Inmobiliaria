@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-o4$xfddkn==z=_ejh@@&%*^bu=%gg59ak9l5!%qlyf^^8(venf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['inmobiliaria-x55t.onrender.com']
+ALLOWED_HOSTS = ['inmobiliaria-x55t.onrender.com', 'homeasesoresinmobiliarios.com'. 'www.homeasesoresinmobiliarios.com']
 
 
 # Application definition
