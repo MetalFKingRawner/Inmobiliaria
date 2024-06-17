@@ -203,54 +203,6 @@
         <a href="{% url 'agregar2' %}" id="regresar">Ir a agregar Terrenos</a>
     </div>
     <!-- Incluir el archivo app.js -->
-    <script src="{% static 'js/app.js' %}"></script>
-    <script>
-        document.getElementById('formularioAgregarPropiedad').addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            let direccionAutomata = new direccion();
-            let paisAutomata = new pais();
-            let precioAutomata = new precio();
-            let metrosAutomata = new metros();
-
-            let calle = document.getElementById('calle').value;
-            let colonia = document.getElementById('colonia').value;
-            let ciudad = document.getElementById('ciudad').value;
-            let estado = document.getElementById('estado').value;
-            let paisvalue = document.getElementById('pais').value;
-            let preciovalue = document.getElementById('precio').value;
-            let metrosCuadrados = document.getElementById('metros_cuadrados').value;
-
-            let errores = [];
-
-            if (!direccionAutomata.isInputValid(calle)) {
-                errores.push('Calle');
-            }
-            if (!direccionAutomata.isInputValid(colonia)) {
-                errores.push('Colonia');
-            }
-            if (!paisAutomata.isInputValid(ciudad)) {
-                errores.push('Ciudad');
-            }
-            if (!paisAutomata.isInputValid(estado)) {
-                errores.push('Estado');
-            }
-            if (!paisAutomata.isInputValid(paisvalue)) {
-                errores.push('País');
-            }
-            if (!precioAutomata.isInputValid(preciovalue)) {
-                errores.push('Precio');
-            }
-            if (!metrosAutomata.isInputValid(metrosCuadrados)) {
-                errores.push('Metros Cuadrados');
-            }
-
-            if (errores.length > 0) {
-                alert('Dato erróneo en ' + errores.join(', ') + '. Verifica la escritura.');
-            } else {
-                this.submit();
-            }
-        });
-    </script>
+    
 </body>
 </html>
