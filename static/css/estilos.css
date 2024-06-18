@@ -233,15 +233,16 @@ body {
 
 .carousel__elemento {
     text-align: center;
-    flex: 0 0 16.99%; /* Ancho de cada elemento del carrusel */
+    flex: 0 0 10%; /* Ancho de cada elemento del carrusel */
 }
 
 .carousel__elemento img {
     width: 100%;
-    height: auto;
-    max-height: 600px; /* Aumenta la altura máxima de las imágenes */
+    height: 200px; /* Altura fija para todas las imágenes */
+    object-fit: cover; /* Ajusta la imagen para que cubra todo el contenedor sin distorsión */
     border-radius: 10px; /* Bordes redondeados */
 }
+
 
 
 .carousel__indicadores .glider-dot {
