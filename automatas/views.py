@@ -11,11 +11,41 @@ from .forms import TerrenoForm
 from django.core.files.storage import FileSystemStorage
 from django.http import JsonResponse
 from django.contrib import messages
+import random
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from django.conf import settings
 
-
-# Create your views here.
-def index(request):
+def enviar_correo(request):
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        email = request.POST.get('email')
+        mensaje = request.POST.get('mensaje')
+        
+        # Crea el mensaje de correo
+        asunto = f'Nuevo mensaje de {nombre}'
+        mensaje_correo = f'Nombre: {nombre}\nCorreo: {email}\nMensaje:\n{mensaje}'
+        destinatario = ['rawner81@gmail.com']  # Cambia esto al correo destinatario real
+        
+        # Envía el correo
+        send_mail(asunto, mensaje_correo, settings.EMAIL_HOST_USER, destinatario)
+        
+        return render(request, 'index.html')
     return render(request, 'index.html')
+
+def index(request):
+    propiedades = list(Propiedad.objects.all())
+    terrenos = list(Terrenos.objects.all())
+
+    # Marca los inmuebles con su tipo
+    propiedades = [{'objeto': propiedad, 'tipo': 'propiedad'} for propiedad in propiedades]
+    terrenos = [{'objeto': terreno, 'tipo': 'terreno'} for terreno in terrenos]
+
+    inmuebles = propiedades + terrenos
+
+    inmuebles_random = random.sample(inmuebles, min(len(inmuebles), 10))
+    return render(request, 'index.html', {'inmuebles': inmuebles_random})
+
 
 def formulario(request):
     return render(request, 'formulario.html')
