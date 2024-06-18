@@ -39,58 +39,34 @@
 
 
 	<div class="contenedor">
-		
+        <div class="carousel">
+            <div class="carousel__contenedor">
+                <button aria-label="Anterior" class="carousel__anterior">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
 
-		<div class="carousel">
-			<div class="carousel__contenedor">
-				<button aria-label="Anterior" class="carousel__anterior">
-					<i class="fas fa-chevron-left"></i>
-				</button>
+                <div class="carousel__lista">
+                    {% for inmueble in inmuebles %}
+                    <div class="carousel__elemento">
+                        <a href="{% if inmueble.tipo == 'propiedad' %}{% url 'detalle_propiedad' inmueble.objeto.id %}{% else %}{% url 'detalle_terreno' inmueble.objeto.id %}{% endif %}">
+                            {% if inmueble.tipo == 'propiedad' %}
+                                <img src="{{ inmueble.objeto.imagen_url }}" alt="Imagen de propiedad">
+                            {% else %}
+                                <img src="{{ inmueble.objeto.imagen_url2 }}" alt="Imagen de terreno">
+                            {% endif %}
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
 
-				<div class="carousel__lista">
-					<div class="carousel__elemento">
-						<img src="{% static 'img/2.png' %}" alt="Rock and Roll Hall of Fame">
-						<p>Rock and Roll Hall of Fame</p>
-					</div>
-					<div class="carousel__elemento">
-						<img src="{% static 'img/3.png' %}" alt="Constitution Square - Tower I">
-						<p>Constitution Square - Tower I</p>
-					</div>
-					<div class="carousel__elemento">
-						<img src="{% static 'img/4.png' %}" alt="Empire State Building">
-						<p>Empire State Building</p>
-					</div>
-					<div class="carousel__elemento">
-						<img src="{% static 'img/5.png' %}" alt="Harmony Tower">
-						<p>Harmony Tower</p>
-					</div>
-	
-					<div class="carousel__elemento">
-						<img src="{% static 'img/6.png' %}" alt="Empire State Building">
-						<p>Empire State Building</p>
-					</div>
-					<div class="carousel__elemento">
-						<img src="{% static 'img/7.png' %}" alt="Harmony Tower">
-						<p>Harmony Tower</p>
-					</div>
-					<div class="carousel__elemento">
-						<img src="{% static 'img/8.png' %}" alt="Empire State Building">
-						<p>Empire State Building</p>
-					</div>
-					<div class="carousel__elemento">
-						<img src="{% static 'img/9.png' %}" alt="Harmony Tower">
-						<p>Harmony Tower</p>
-					</div>
-				</div>
+                <button aria-label="Siguiente" class="carousel__siguiente">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
 
-				<button aria-label="Siguiente" class="carousel__siguiente">
-					<i class="fas fa-chevron-right"></i>
-				</button>
-			</div>
-
-			<div role="tablist" class="carousel__indicadores"></div>
-		</div>
-	</div>
+            <div role="tablist" class="carousel__indicadores"></div>
+        </div>
+    </div>
 	<div class="contenido-principal-wrapper">
 		<div class="contenido-principal">
 			<img src="{% static 'img/Logo.png' %}" alt="HOME ASESORES INMOBILIARIOS Bundestag" class="contenido-principal__imagen">
