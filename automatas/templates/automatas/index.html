@@ -212,7 +212,7 @@
 	
 		
 		
-             <form action="/ventacasa/" method="post">
+              <form id="contactForm" action="/procesar_formulario" method="post" onsubmit="procesarFormulario(event)">
 				<h1>Contactanos</h1>
 		
 				<label for="nombre">Nombre:</label>
@@ -231,5 +231,20 @@
 	<script src="https://cdn.jsdelivr.net/npm/glider-js@1.7.3/glider.min.js"></script>
 	<script src="https://kit.fontawesome.com/2c36e9b7b1.js" crossorigin="anonymous"></script>
 	<script src="{% static 'js/app.js' %}"></script>
+	 <script>
+        function procesarFormulario(event) {
+            event.preventDefault();  // Prevenir el envío real del formulario
+
+            // Limpiar los campos del formulario
+            document.getElementById('nombre').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('mensaje').value = '';
+
+            // Mostrar un mensaje emergente
+            alert('Te contactaremos');
+
+            // Aquí podrías añadir una llamada fetch para enviar los datos al servidor si fuera necesario
+        }
+    </script>
 </body>
 </html>
