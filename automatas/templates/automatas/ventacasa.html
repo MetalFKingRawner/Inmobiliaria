@@ -1,6 +1,9 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,183 +12,80 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-0BmcwMxJnvip7ArNsoq0cq14+xjW3qfnjphNxsD7N9jYh5k1z6ibd6E7Bj/hDqq4vhR6itQ2QQcUta4+G8VRzA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <style>
-        body {
-            font-family: 'Open Sans', sans-serif;
-        }
-        
-        .btn-wsp {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #25d366;
-            color: white;
-            padding: 10px;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            text-align: center;
-            font-size: 24px;
-            z-index: 1000;
-        }
 
-        .btn-wsp:hover {
-            background-color: #20c658;
-        }
 
-        .search-container {
-            text-align: center;
-            margin: 20px auto;
-            padding: 20px;
-            background: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            max-width: 600px;
-        }
-
-        .search-container p {
-            font-size: 30px;
-            margin: 0 0 20px;
-            line-height: 1.5;
-        }
-
-        .search-container input[type="checkbox"] {
-            margin-right: 10px;
-        }
-
-        .search-container input[type="text"] {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .search-container button {
-            background-color: #4caf50;
-            color: #000000;
-            padding: 10px;
+@@ -70,9 +70,9 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            width: 50%;  /* Changed width to 50% */
             width: 50%;
             font-size: 16px;
+            margin: 10px auto;  /* Center the button horizontally */
             margin: 10px auto;
         }
 
         .search-container button:hover {
-            background-color: #45a049;
-        }
 
-        .hidden {
-            display: none;
-        }
 
-        .item {
-            background: rgba(255, 255, 255, 0.8);
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            margin-bottom: 20px;
-            padding: 15px;
-        }
-
-        .item figure img {
-            width: 100%;
-            border-radius: 8px;
-        }
-
-        .property-icons {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 5px;
-        }
-
-        .property-icons div {
-            display: flex;
-            align-items: center;
-            background-color: white;
-            padding: 5px 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
+@@ -114,8 +114,8 @@
 
         .property-icons img {
             margin-right: 2px;
+            width: 30px; /* Adjust icon size as needed */
+            height: 30px; /* Adjust icon size as needed */
             width: 30px;
             height: 30px;
         }
 
         nav ul {
-            display: flex;
-            justify-content: center;
-            list-style: none;
-            padding: 0;
-        }
 
-        nav ul li {
-            margin: 0 10px;
-        }
 
-        nav ul li a {
-            text-decoration: none;
-            color: #000;
-            padding: 5px 10px;
-        }
-
-        nav ul li a:hover {
-            background-color: #ddd;
-            border-radius: 5px;
-        }
-
-        nav ul ul {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-        }
-
-        nav ul li:hover > ul {
-            display: block;
-        }
-
-        @media (max-width: 768px) {
-            .search-container p {
-                font-size: 24px;
-            }
-
-            .search-container input[type="text"] {
-                width: calc(100% - 20px);
-            }
-
-            .search-container button {
-                width: 100%;
-            }
-
-            .property-icons div {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            nav ul {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            nav ul li {
-                margin: 5px 0;
-            }
-
-            .item {
-                margin: 10px;
+@@ -186,90 +186,87 @@
             }
         }
     </style>
+   </head>
+    <body>
+        <nav>
+            <ul class="menu-horizontal">
+				<li><a href="{% url 'index' %}">INICIO</a></li>
+                <li>
+                    <a href="#">CASAS</a>
+                    <ul class="menu-vertical">
+                        <li><a href="{% url 'ventacasa' %}">VENTA</a></li>
+                    </ul>
+                </li>	
+                <li>
+                    <a href="#">TERRENOS</a>
+                    <ul class="menu-vertical">
+                        <li><a href="{% url 'ventaterr' %}">VENTA</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'formulario' %}">CONTACTANOS</a></li>
+            </ul>
+        </nav>
+        <a href="https://api.whatsapp.com/send?phone=5219511352757" class="btn-wsp" target="_blank">
+            <i class="fa fa-whatsapp icono"></i>
+        </a>
+
+        <div class="search-container">
+            <p>Busca tu nuevo patrimonio</p>
+            <input type="checkbox" id="chkUbicacion" onchange="toggleUbicacionInput()"> Buscar por ubicación
+            <div id="ubicacionInputs" style="display: none;">
+                <input type="text" name="colonia" id="colonia" placeholder="Colonia">
+                <input type="text" name="ciudad" id="ciudad" placeholder="Ciudad">
+            </div>
+
+            <input type="checkbox" id="chkPrecio" onchange="togglePrecioInput()"> Buscar por precio
+            <div id="precioInput" style="display: none;">
+                <input type="text" name="precio" id="precio" placeholder="Precio">
+            </div>
 </head>
 <body>
     <nav>
@@ -218,10 +118,33 @@
             <input type="text" name="ciudad" id="ciudad" placeholder="Ciudad">
         </div>
 
+            <button id="buscador" onclick="filterProperties()">Buscar</button>
         <input type="checkbox" id="chkPrecio" onchange="togglePrecioInput()"> Buscar por precio
         <div id="precioInput" style="display: none;">
             <input type="text" name="precio" id="precio" placeholder="Precio">
         </div>
+        
+        <div id="filteredProperties">
+            {% for inmueble in inmuebles %}
+            <div class="item">
+                <figure>
+                    <a href="{% url 'detalle_propiedad' inmueble.id %}">
+                        <img src="{{ inmueble.imagen_url }}" alt="Imagen de la propiedad">
+                    </a>
+                </figure>
+                <div class="info-product">
+                    <h2 class="Dirección">Calle: {{ inmueble.calle }}</h2>
+                    <h3 id= "colonia" class="Colonia">Colonia: {{ inmueble.colonia }}</h2>
+                    <h4 id="ciudad" class="Ciudad">Ciudad: {{ inmueble.ciudad }}</h3>
+                    <h5 class="Estado">Estado: {{ inmueble.estado }}</h2>
+                    <h5 class="País">País: {{ inmueble.pais }}</h4>
+                    <h5 class="Descripcion">Descripcion: {{ inmueble.descripcion }}</h5>
+                    <p class="price">${{ inmueble.precio }}</p>
+                    <div class="property-icons">
+                        <div><img src="{% static 'img/bano.png' %}" alt="Baños"> {{ inmueble.banos }}</div>
+                        <div><img src="{% static 'img/cuarto.png' %}" alt="Cuartos"> {{ inmueble.cuartos }}</div>
+                        <div><img src="{% static 'img/habitacion.png' %}" alt="Habitaciones"> {{ inmueble.habitacion }}</div>
+                    </div>
 
         <button id="buscador" onclick="filterProperties()">Buscar</button>
     </div>
@@ -246,8 +169,10 @@
                     <div><img src="{% static 'img/bano.png' %}" alt="Baños"> {{ inmueble.banos }}</div>
                     <div><img src="{% static 'img/cuarto.png' %}" alt="Cuartos"> {{ inmueble.cuartos }}</div>
                     <div><img src="{% static 'img/habitacion.png' %}" alt="Habitaciones"> {{ inmueble.habitaciones }}</div>
+                    <div><img src="{% static 'img/area.png' %}" alt="Área"> {{ inmueble.area }}</div>
                 </div>
             </div>
+            {% endfor %}
         </div>
         {% endfor %}
     </div>
@@ -265,15 +190,35 @@
             precioInput.style.display = chkPrecio.checked ? 'block' : 'none';
         }
 
+        <footer style="color: #000000; text-align: center; padding: 10px;">
+            <p>&copy; 2023 HOME Asesores Inmobiliarios. Todos los derechos reservados.</p>
+        </footer>  
+		<script src="{% static 'js/app.js' %}"></script>
+		<script>
+			function toggleUbicacionInput() {
+			  const ubicacionInputs = document.getElementById('ubicacionInputs');
+			  const chkUbicacion = document.getElementById('chkUbicacion');
+			  ubicacionInputs.style.display = chkUbicacion.checked ? 'block' : 'none';
+			}
+		
+			function togglePrecioInput() {
+			  const precioInput = document.getElementById('precioInput');
+			  const chkPrecio = document.getElementById('chkPrecio');
+			  precioInput.style.display = chkPrecio.checked ? 'block' : 'none';
+			}
+
+			$(function() {
         $(function() {
             $("#colonia").autocomplete({
                 source: "{% url 'autocomplete_colonia' %}"
             });
 
-            $("#ciudad").autocomplete({
+@@ -278,6 +275,6 @@
                 source: "{% url 'autocomplete_ciudad' %}"
             });
         });
+		</script>
+    </body>
     </script>
 </body>
 </html>
