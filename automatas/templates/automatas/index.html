@@ -11,7 +11,31 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/estilos.css' %}">
 	<script src="https://kit.fontawesome.com/eb496ab1a0.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        function enviarFormulario(event) {
+            event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
 
+            const form = document.querySelector('form');
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': form.querySelector('input[name="csrfmiddlewaretoken"]').value // CSRF token for Django
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Limpiar los campos del formulario
+                form.reset();
+                
+                // Mostrar una alerta con el día de contacto
+                alert('Nos contactaremos contigo el día ' + data.dia_contacto);
+            })
+            .catch(error => console.error('Error:', error));
+        }
+    </script>
 
     
 </head>
@@ -198,7 +222,7 @@
 	
 		
 		
-             <form action="/procesar_formulario" method="post">
+             <form action="/procesar_formulario" method="post" onsubmit="enviarFormulario(event)">
 				<h1>Contactanos</h1>
 		
 				<label for="nombre">Nombre:</label>
