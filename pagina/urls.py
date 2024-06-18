@@ -20,6 +20,7 @@ from automatas import views
 from django.conf import settings
 from django.conf.urls.static import static
 from automatas.views import autocomplete_colonia, autocomplete_ciudad, autocomplete_ciudad2, autocomplete_colonia2
+from automatas.views import enviar_correo
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -43,4 +44,5 @@ urlpatterns = [
     path('autocomplete/ciudad/', autocomplete_ciudad, name='autocomplete_ciudad'),
     path('autocomplete2/colonia/', autocomplete_colonia2, name='autocomplete_colonia2'),
     path('autocomplete2/ciudad/', autocomplete_ciudad2, name='autocomplete_ciudad2'),
+    path('', enviar_correo, name='enviar_correo'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
