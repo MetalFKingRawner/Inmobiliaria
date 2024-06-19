@@ -26,7 +26,7 @@ def enviar_correo(request):
         # Crea el mensaje de correo
         asunto = f'Nuevo mensaje de {nombre}'
         mensaje_correo = f'Nombre: {nombre}\nCorreo: {email}\nMensaje:\n{mensaje}'
-        destinatario = ['rawner81@gmail.com']  # Lista de destinatarios
+        destinatario = ['aroruac@hotmail.com']  # Lista de destinatarios
         
         # Crea el correo electrónico
         email = EmailMessage(
