@@ -39,7 +39,7 @@ def enviar_correo(request):
         # Envía el correo
         email.send()
         
-        return render(request, 'index.html')
+        return redirect('index')
     return render(request, 'index.html')
 
 def index(request):
