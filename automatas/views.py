@@ -202,19 +202,17 @@ def agregar_propiedad2(request):
     return render(request, 'agregar2.html')
 
 def guardar_imagen(imagen):
-    # Ruta donde se guardarán las imágenes
-    ruta_base = os.path.join(settings.BASE_DIR, 'media')
-
+    # Ruta donde se guardarán las imágenes en Render Disks
+    ruta_base = settings.MEDIA_ROOT  # Ya debería estar configurado en settings.py
     # Generar nombre único para la imagen
     nombre_imagen = f'{uuid.uuid4()}{imagen.name}'
-
     # Guardar la imagen en la ruta
     with open(os.path.join(ruta_base, nombre_imagen), 'wb+') as f:
-        f.write(imagen.file.read())
-
-    # Retornar la ruta de la imagen
+        for chunk in imagen.chunks():
+            f.write(chunk)
+    # Retornar la ruta completa de la imagen
     return os.path.join(settings.MEDIA_URL, nombre_imagen)
-
+    
 def eliminar_propiedad(request, id):
     # Obtener la propiedad a eliminar
     propiedad = Propiedad.objects.get(pk=id)
@@ -288,10 +286,10 @@ def editar_propiedad(request, id):
                     # Si hay una nueva imagen, reemplaza la anterior
                     if i <= len(anteriores_extras):
                         eliminar_imagen(anteriores_extras[i - 1])
-                        nuevas_rutas_imagenes.append(handle_uploaded_file(imagen_extra))
+                        nuevas_rutas_imagenes.append(guardar_imagen(imagen_extra))
                     else:
                         # Añadir una nueva imagen si hay más imágenes nuevas que antiguas
-                        nuevas_rutas_imagenes.append(handle_uploaded_file(imagen_extra))
+                        nuevas_rutas_imagenes.append(guardar_imagen(imagen_extra))
                 elif i <= len(anteriores_extras):
                     # Si no se ha subido una nueva imagen para este índice, mantener la anterior
                     nuevas_rutas_imagenes.append(anteriores_extras[i - 1])
@@ -339,10 +337,10 @@ def editar_terreno(request, id):
                     # Si hay una nueva imagen, reemplaza la anterior
                     if i <= len(anteriores_extras):
                         eliminar_imagen(anteriores_extras[i - 1])
-                        nuevas_rutas_imagenes.append(handle_uploaded_file(imagen_extra))
+                        nuevas_rutas_imagenes.append(guardar_imagen(imagen_extra))
                     else:
                         # Añadir una nueva imagen si hay más imágenes nuevas que antiguas
-                        nuevas_rutas_imagenes.append(handle_uploaded_file(imagen_extra))
+                        nuevas_rutas_imagenes.append(guardar_imagen(imagen_extra))
                 elif i <= len(anteriores_extras):
                     # Si no se ha subido una nueva imagen para este índice, mantener la anterior
                     nuevas_rutas_imagenes.append(anteriores_extras[i - 1])
