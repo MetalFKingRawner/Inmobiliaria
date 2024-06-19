@@ -15,6 +15,7 @@ import random
 from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.conf import settings
+from django.core.mail import EmailMessage
 
 def enviar_correo(request):
     if request.method == 'POST':
@@ -25,10 +26,18 @@ def enviar_correo(request):
         # Crea el mensaje de correo
         asunto = f'Nuevo mensaje de {nombre}'
         mensaje_correo = f'Nombre: {nombre}\nCorreo: {email}\nMensaje:\n{mensaje}'
-        destinatario = ['rawner81@gmail.com']  # Cambia esto al correo destinatario real
+        destinatario = ['rawner81@gmail.com']  # Lista de destinatarios
+        
+        # Crea el correo electrónico
+        email = EmailMessage(
+            asunto,  # Asunto
+            mensaje_correo,  # Mensaje
+            settings.EMAIL_HOST_USER,  # Remitente
+            destinatario  # Lista de destinatarios
+        )
         
         # Envía el correo
-        send_mail(asunto, mensaje_correo, settings.EMAIL_HOST_USER, destinatario)
+        email.send()
         
         return render(request, 'index.html')
     return render(request, 'index.html')
