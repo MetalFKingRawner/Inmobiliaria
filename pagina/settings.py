@@ -57,7 +57,7 @@ ROOT_URLCONF = 'pagina.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'automatas' / 'templates' / 'automatas'],  # Ruta relativa
+        'DIRS': [os.path.join(BASE_DIR, 'automatas', 'templates', 'automatas')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
