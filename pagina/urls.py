@@ -44,5 +44,5 @@ urlpatterns = [
     path('autocomplete/ciudad/', autocomplete_ciudad, name='autocomplete_ciudad'),
     path('autocomplete2/colonia/', autocomplete_colonia2, name='autocomplete_colonia2'),
     path('autocomplete2/ciudad/', autocomplete_ciudad2, name='autocomplete_ciudad2'),
-    path('/', enviar_correo, name='enviar_correo'),
+    path('', enviar_correo, name='enviar_correo'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
