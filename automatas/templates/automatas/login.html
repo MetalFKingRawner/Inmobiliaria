@@ -76,7 +76,7 @@ body {
 <div class="container">
     <h2>Login</h2>
     <form id="loginForm">
-        <label for="username">Username:</label>
+        <label for="email">Email:</label>
         <input type="text" id="username" name="username" required>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
@@ -91,11 +91,11 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
     // Función para iniciar sesión
     function login() {
         // Obtiene los valores de usuario y contraseña ingresados por el usuario
-        var username = document.getElementById("username").value;
+        var email = document.getElementById("email").value;
         var password = document.getElementById("password").value;
 
         // Verifica las credenciales
-        if (username === "aroruac@hotmail.com" && password === "Soloxhoy#1") {
+        if (email === "aroruac@hotmail.com" && password === "Soloxhoy#1") {
             // Redirige al usuario a la página agregar.html
             window.location.href = "{% url 'propiedades' %}";
         } else {
