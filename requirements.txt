@@ -3,6 +3,6 @@ psycopg2-binary
 gunicorn  # Opcional, si usas Gunicorn
 whitenoise  # Opcional, si usas WhiteNoise
 Pillow
-django-cloudinary-storage==1.8
+django-cloudinary-storage==0.3.0
 cloudinary==1.35.0
 python-dotenv==1.0.0  # Opcional pero recomendado
