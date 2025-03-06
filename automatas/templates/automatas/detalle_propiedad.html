@@ -105,12 +105,11 @@
             <div id="extraImagesContainer" class="extra-images-container">
                 {% if propiedad.imagen_url %}
                 <img class="extra-image" src="{{ propiedad.imagen_url }}" alt="Imagen de la propiedad">
-                <div class="extra-images-container">
-                    {% for imagen_url in propiedad.imagenes_urls %}
-                    <img class="extra-image" src="{{ imagen_url }}" alt="Imagen extra de la propiedad">
-                    {% endfor %}
-                </div>
                 {% endif %}
+                {% for imagen_url in propiedad.imagenes_urls %}
+                <img class="extra-image" src="{{ imagen_url }}" alt="Imagen extra de la propiedad">
+                {% endfor %}
+                
             </div>
         </div>
         <div class="right-box">
