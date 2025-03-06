@@ -124,6 +124,18 @@ def agregar_propiedad(request):
             messages.error(request, 'Ya existe una propiedad con las mismas características.')
             return render(request, 'agregar.html')
 
+        # Guardar la imagen
+        imagen = request.FILES['imagen']
+        ruta_imagen = guardar_imagen(imagen)
+
+        # Guardar imágenes adicionales
+        imagenes_adicionales = []
+        for i in range(1, 5):  # Asumiendo que tienes hasta 4 imágenes adicionales
+            imagen_adicional = request.FILES.get(f'imagenextra{i}')
+            if imagen_adicional:
+                ruta_imagen_adicional = guardar_imagen(imagen_adicional)
+                imagenes_adicionales.append(ruta_imagen_adicional)
+
         # Crear nuevo registro en la base de datos
         propiedad = Propiedad(
             calle=calle,
@@ -134,25 +146,12 @@ def agregar_propiedad(request):
             descripcion=descripcion,
             precio=precio,
             metros_cuadrados=metros_cuadrados,
-            banos=banos,
-            cuartos=cuartos,
-            habitacion=habitacion
+            banos = banos,
+            cuartos = cuartos,
+            habitacion = habitacion,
+            imagen_url=ruta_imagen,
+            imagenes_urls=imagenes_adicionales
         )
-
-        # Subir imagen principal
-        if 'imagen' in request.FILES:
-            propiedad.imagen_url = request.FILES['imagen']  # CloudinaryField maneja la subida automática
-
-        # Subir imágenes adicionales
-        imagenes_adicionales = []
-        for i in range(1, 5):
-            imagen_adicional = request.FILES.get(f'imagenextra{i}')
-            if imagen_adicional:
-                url = guardar_imagen(imagen_adicional, folder='propiedades/extras')
-                if url:
-                    imagenes_adicionales.append(url)
-
-        propiedad.imagenes_urls = imagenes_adicionales
         propiedad.save()
 
         # Redirigir a otra página (opcional)
