@@ -212,23 +212,22 @@ def guardar_imagen(imagen, folder='propiedades/extras'):
         print(f"Error subiendo imagen: {e}")
         return None
     
+# Modificar la vista eliminar_propiedad
 def eliminar_propiedad(request, id):
-    # Obtener la propiedad a eliminar
     propiedad = Propiedad.objects.get(pk=id)
     
-    # Eliminar el archivo de la carpeta media si existe
+    # Eliminar imagen principal
     if propiedad.imagen_url:
-        # Construir la ruta del archivo en la carpeta media
-        ruta_archivo = os.path.join(settings.MEDIA_ROOT, propiedad.imagen_url.replace(settings.MEDIA_URL, ''))
-        
-        # Verificar si el archivo existe y eliminarlo
-        if os.path.exists(ruta_archivo):
-            os.remove(ruta_archivo)
+        try:
+            eliminar_imagen(propiedad.imagen_url.url)  # Elimina de Cloudinary
+        except Exception as e:
+            print(f"Error eliminando imagen principal: {e}")
     
-    # Eliminar la propiedad de la base de datos
+    # Eliminar imágenes adicionales
+    for url in propiedad.imagenes_urls:
+        eliminar_imagen(url)
+    
     propiedad.delete()
-    
-    # Redirigir a otra página después de eliminar la propiedad
     return redirect('propiedades')
 
 def eliminar_terreno(request, id):
