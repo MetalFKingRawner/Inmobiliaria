@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from cloudinary.models import CloudinaryField
 
 class Propiedad(models.Model):
     id = models.AutoField(primary_key=True)
