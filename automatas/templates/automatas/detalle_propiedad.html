@@ -100,11 +100,11 @@
     <div class="container">
         <div class="left-box">
             {% if propiedad.imagen_url %}
-            <img id="mainImage" class="main-image" src="{{ propiedad.imagen_url }}" alt="Imagen de la propiedad">
+            <img id="mainImage" class="main-image" src="{{ propiedad.imagen_url.url }}" alt="Imagen de la propiedad">
             {% endif %}
             <div id="extraImagesContainer" class="extra-images-container">
                 {% if propiedad.imagen_url %}
-                <img class="extra-image" src="{{ propiedad.imagen_url.url }}" alt="Imagen extra de la propiedad" onclick="changeImage(this)">
+                <img class="extra-image" src="{{ url }}" alt="Imagen extra de la propiedad" onclick="changeImage(this)">
                 {% endif %}
                 {% for imagen_url in propiedad.imagenes_urls %}
                 <img class="extra-image" src="{{ url }}" alt="Imagen extra de la propiedad" onclick="changeImage(this)">
