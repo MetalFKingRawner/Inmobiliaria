@@ -104,7 +104,7 @@
             {% endif %}
             <div id="extraImagesContainer" class="extra-images-container">
                 {% if propiedad.imagen_url %}
-                <img class="main-image" src="{{ propiedad.imagen_url }}" alt="Imagen de la propiedad">
+                <img class="extra-image" src="{{ propiedad.imagen_url }}" alt="Imagen de la propiedad">
                 <h2>Imágenes Extras</h2>
                 <div class="extra-images-container">
                     {% for imagen_url in propiedad.imagenes_urls %}
