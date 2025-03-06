@@ -212,22 +212,23 @@ def guardar_imagen(imagen, folder='propiedades/extras'):
         print(f"Error subiendo imagen: {e}")
         return None
     
-# Modificar la vista eliminar_propiedad
 def eliminar_propiedad(request, id):
+    # Obtener la propiedad a eliminar
     propiedad = Propiedad.objects.get(pk=id)
     
-    # Eliminar imagen principal
+    # Eliminar el archivo de la carpeta media si existe
     if propiedad.imagen_url:
-        try:
-            propiedad.imagen_url.delete()  # Elimina de Cloudinary
-        except Exception as e:
-            print(f"Error eliminando imagen principal: {e}")
+        # Construir la ruta del archivo en la carpeta media
+        ruta_archivo = os.path.join(settings.MEDIA_ROOT, propiedad.imagen_url.replace(settings.MEDIA_URL, ''))
+        
+        # Verificar si el archivo existe y eliminarlo
+        if os.path.exists(ruta_archivo):
+            os.remove(ruta_archivo)
     
-    # Eliminar imágenes adicionales
-    for url in propiedad.imagenes_urls:
-        eliminar_imagen(url)
-    
+    # Eliminar la propiedad de la base de datos
     propiedad.delete()
+    
+    # Redirigir a otra página después de eliminar la propiedad
     return redirect('propiedades')
 
 def eliminar_terreno(request, id):
@@ -269,24 +270,32 @@ def editar_propiedad(request, id):
             nueva_propiedad = form.save(commit=False)
             print(propiedad.imagen_url)
             
+            # Si hay una nueva imagen y es diferente a la anterior, eliminar la anterior
             if 'imagen_url' in form.changed_data:
-                old_image = form.initial.get('imagen_url')
-                if old_image:
-                    eliminar_imagen('imagen_url')  # Eliminar vieja imagen de Cloudinary
+                eliminar_imagen(anterior)
+
+                # Guardar la nueva imagen
+                nueva_propiedad.imagen_url = guardar_imagen(request.FILES['imagen_url'])
 
             # Manejar imágenes adicionales
-            nuevas_urls = []
+            nuevas_rutas_imagenes = []
             for i in range(1, 5):
-                imagen = request.FILES.get(f'imagen_extra_{i}')
-                if imagen:
-                    url = guardar_imagen(imagen, folder='propiedades/extras')
-                    if url:
-                        nuevas_urls.append(url)
-                elif i <= len(propiedad.imagenes_urls):
-                    nuevas_urls.append(propiedad.imagenes_urls[i-1])
+                imagen_extra = request.FILES.get(f'imagen_extra_{i}')
+                if imagen_extra:
+                    # Si hay una nueva imagen, reemplaza la anterior
+                    if i <= len(anteriores_extras):
+                        eliminar_imagen(anteriores_extras[i - 1])
+                        nuevas_rutas_imagenes.append(handle_uploaded_file(imagen_extra))
+                    else:
+                        # Añadir una nueva imagen si hay más imágenes nuevas que antiguas
+                        nuevas_rutas_imagenes.append(handle_uploaded_file(imagen_extra))
+                elif i <= len(anteriores_extras):
+                    # Si no se ha subido una nueva imagen para este índice, mantener la anterior
+                    nuevas_rutas_imagenes.append(anteriores_extras[i - 1])
 
-            propiedad.imagenes_urls = nuevas_urls
-            form.save()
+            nueva_propiedad.imagenes_urls = nuevas_rutas_imagenes
+            # Guardar la propiedad actualizada en la base de datos
+            nueva_propiedad.save()
 
             # Redirigir a la página de propiedades después de la edición
             return redirect('propiedades')
