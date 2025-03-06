@@ -124,6 +124,21 @@ def agregar_propiedad(request):
             messages.error(request, 'Ya existe una propiedad con las mismas características.')
             return render(request, 'agregar.html')
 
+        # Crear nuevo registro en la base de datos
+        propiedad = Propiedad(
+            calle=calle,
+            colonia=colonia,
+            estado=estado,
+            pais=pais,
+            ciudad=ciudad,
+            descripcion=descripcion,
+            precio=precio,
+            metros_cuadrados=metros_cuadrados,
+            banos=banos,
+            cuartos=cuartos,
+            habitacion=habitacion
+        )
+
         # Subir imagen principal
         if 'imagen' in request.FILES:
             propiedad.imagen_url = request.FILES['imagen']  # CloudinaryField maneja la subida automática
@@ -137,22 +152,7 @@ def agregar_propiedad(request):
                 if url:
                     imagenes_adicionales.append(url)
 
-        # Crear nuevo registro en la base de datos
-        propiedad = Propiedad(
-            calle=calle,
-            colonia=colonia,
-            estado=estado,
-            pais=pais,
-            ciudad=ciudad,
-            descripcion=descripcion,
-            precio=precio,
-            metros_cuadrados=metros_cuadrados,
-            banos = banos,
-            cuartos = cuartos,
-            habitacion = habitacion,
-            imagen_url=ruta_imagen,
-            imagenes_urls=imagenes_adicionales
-        )
+        propiedad.imagenes_urls = imagenes_adicionales
         propiedad.save()
 
         # Redirigir a otra página (opcional)
