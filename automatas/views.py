@@ -236,12 +236,13 @@ def eliminar_terreno(request, id):
     
     # Eliminar el archivo de la carpeta media si existe
     if terreno.imagen_url2:
-        # Construir la ruta del archivo en la carpeta media
-        ruta_archivo = os.path.join(settings.MEDIA_ROOT, terreno.imagen_url2.replace(settings.MEDIA_URL, ''))
-        
-        # Verificar si el archivo existe y eliminarlo
-        if os.path.exists(ruta_archivo):
-            os.remove(ruta_archivo)
+        try:
+            eliminar_imagen(terreno.imagen_url2.url)
+        except Exception as e:
+            print(f"Error eliminando imagen principal: {e}")
+
+    for url in terreno.imagenes_urls2:
+        eliminar_imagen(url)
     
     # Eliminar la propiedad de la base de datos
     terreno.delete()
