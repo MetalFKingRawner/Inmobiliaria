@@ -16,6 +16,8 @@ from django.core.mail import send_mail
 from django.shortcuts import render, redirect
 from django.conf import settings
 from django.core.mail import EmailMessage
+from cloudinary.uploader import upload, destroy
+from cloudinary.utils import cloudinary_url
 
 def enviar_correo(request):
     if request.method == 'POST':
@@ -122,17 +124,18 @@ def agregar_propiedad(request):
             messages.error(request, 'Ya existe una propiedad con las mismas características.')
             return render(request, 'agregar.html')
 
-        # Guardar la imagen
-        imagen = request.FILES['imagen']
-        ruta_imagen = guardar_imagen(imagen)
+        # Subir imagen principal
+        if 'imagen' in request.FILES:
+            propiedad.imagen_url = request.FILES['imagen']  # CloudinaryField maneja la subida automática
 
-        # Guardar imágenes adicionales
+        # Subir imágenes adicionales
         imagenes_adicionales = []
-        for i in range(1, 5):  # Asumiendo que tienes hasta 4 imágenes adicionales
+        for i in range(1, 5):
             imagen_adicional = request.FILES.get(f'imagenextra{i}')
             if imagen_adicional:
-                ruta_imagen_adicional = guardar_imagen(imagen_adicional)
-                imagenes_adicionales.append(ruta_imagen_adicional)
+                url = guardar_imagen(imagen_adicional, folder='propiedades/extras')
+                if url:
+                    imagenes_adicionales.append(url)
 
         # Crear nuevo registro en la base de datos
         propiedad = Propiedad(
@@ -201,35 +204,31 @@ def agregar_propiedad2(request):
 
     return render(request, 'agregar2.html')
 
-def guardar_imagen(imagen):
-    # Ruta donde se guardarán las imágenes en Render Disks
-    ruta_base = settings.MEDIA_ROOT  # Ya debería estar configurado en settings.py
-    # Generar nombre único para la imagen
-    nombre_imagen = f'{uuid.uuid4()}{imagen.name}'
-    # Guardar la imagen en la ruta
-    with open(os.path.join(ruta_base, nombre_imagen), 'wb+') as f:
-        for chunk in imagen.chunks():
-            f.write(chunk)
-    # Retornar la ruta completa de la imagen
-    return os.path.join(settings.MEDIA_URL, nombre_imagen)
+def guardar_imagen(imagen, folder='propiedades/extras'):
+    """Sube una imagen a Cloudinary y devuelve su URL"""
+    try:
+        resultado = upload(imagen, folder=folder)
+        return resultado['secure_url']
+    except Exception as e:
+        print(f"Error subiendo imagen: {e}")
+        return None
     
+# Modificar la vista eliminar_propiedad
 def eliminar_propiedad(request, id):
-    # Obtener la propiedad a eliminar
     propiedad = Propiedad.objects.get(pk=id)
     
-    # Eliminar el archivo de la carpeta media si existe
+    # Eliminar imagen principal
     if propiedad.imagen_url:
-        # Construir la ruta del archivo en la carpeta media
-        ruta_archivo = os.path.join(settings.MEDIA_ROOT, propiedad.imagen_url.replace(settings.MEDIA_URL, ''))
-        
-        # Verificar si el archivo existe y eliminarlo
-        if os.path.exists(ruta_archivo):
-            os.remove(ruta_archivo)
+        try:
+            propiedad.imagen_url.delete()  # Elimina de Cloudinary
+        except Exception as e:
+            print(f"Error eliminando imagen principal: {e}")
     
-    # Eliminar la propiedad de la base de datos
+    # Eliminar imágenes adicionales
+    for url in propiedad.imagenes_urls:
+        eliminar_imagen(url)
+    
     propiedad.delete()
-    
-    # Redirigir a otra página después de eliminar la propiedad
     return redirect('propiedades')
 
 def eliminar_terreno(request, id):
@@ -271,32 +270,24 @@ def editar_propiedad(request, id):
             nueva_propiedad = form.save(commit=False)
             print(propiedad.imagen_url)
             
-            # Si hay una nueva imagen y es diferente a la anterior, eliminar la anterior
             if 'imagen_url' in form.changed_data:
-                eliminar_imagen(anterior)
-
-                # Guardar la nueva imagen
-                nueva_propiedad.imagen_url = guardar_imagen(request.FILES['imagen_url'])
+                old_image = form.initial.get('imagen_url')
+                if old_image:
+                    old_image.delete()  # Eliminar vieja imagen de Cloudinary
 
             # Manejar imágenes adicionales
-            nuevas_rutas_imagenes = []
+            nuevas_urls = []
             for i in range(1, 5):
-                imagen_extra = request.FILES.get(f'imagen_extra_{i}')
-                if imagen_extra:
-                    # Si hay una nueva imagen, reemplaza la anterior
-                    if i <= len(anteriores_extras):
-                        eliminar_imagen(anteriores_extras[i - 1])
-                        nuevas_rutas_imagenes.append(guardar_imagen(imagen_extra))
-                    else:
-                        # Añadir una nueva imagen si hay más imágenes nuevas que antiguas
-                        nuevas_rutas_imagenes.append(guardar_imagen(imagen_extra))
-                elif i <= len(anteriores_extras):
-                    # Si no se ha subido una nueva imagen para este índice, mantener la anterior
-                    nuevas_rutas_imagenes.append(anteriores_extras[i - 1])
+                imagen = request.FILES.get(f'imagen_extra_{i}')
+                if imagen:
+                    url = guardar_imagen(imagen, folder='propiedades/extras')
+                    if url:
+                        nuevas_urls.append(url)
+                elif i <= len(propiedad.imagenes_urls):
+                    nuevas_urls.append(propiedad.imagenes_urls[i-1])
 
-            nueva_propiedad.imagenes_urls = nuevas_rutas_imagenes
-            # Guardar la propiedad actualizada en la base de datos
-            nueva_propiedad.save()
+            propiedad.imagenes_urls = nuevas_urls
+            form.save()
 
             # Redirigir a la página de propiedades después de la edición
             return redirect('propiedades')
@@ -375,12 +366,13 @@ def guardar_imagen2(imagen):
     # Retornar la ruta de la imagen
     return os.path.join(settings.MEDIA_URL, nombre_imagen)
 
-def eliminar_imagen(ruta):
-    # Eliminar el archivo de la carpeta media si existe
-    ruta_archivo = os.path.join(settings.MEDIA_ROOT, ruta.replace(settings.MEDIA_URL, ''))
-    if os.path.exists(ruta_archivo):
-        print("Si existe!!")
-        os.remove(ruta_archivo)
+def eliminar_imagen(url):
+    """Elimina una imagen de Cloudinary usando su URL"""
+    try:
+        public_id = url.split('/')[-1].split('.')[0]
+        destroy(public_id)
+    except Exception as e:
+        print(f"Error eliminando imagen: {e}")
 
 def autocomplete_colonia(request):
     if 'term' in request.GET:
