@@ -50,9 +50,9 @@
                     <div class="carousel__elemento">
                         <a href="{% if inmueble.tipo == 'propiedad' %}{% url 'detalle_propiedad' inmueble.objeto.id %}{% else %}{% url 'detalle_terreno' inmueble.objeto.id %}{% endif %}">
                             {% if inmueble.tipo == 'propiedad' %}
-                                <img src="{{ inmueble.objeto.imagen_url }}" alt="Imagen de propiedad">
+                                <img src="{{ inmueble.objeto.imagen_url.url }}" alt="Imagen de propiedad">
                             {% else %}
-                                <img src="{{ inmueble.objeto.imagen_url2 }}" alt="Imagen de terreno">
+                                <img src="{{ inmueble.objeto.imagen_url2.url }}" alt="Imagen de terreno">
                             {% endif %}
                         </a>
                     </div>
