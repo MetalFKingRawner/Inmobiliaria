@@ -12,8 +12,8 @@ class Propiedad(models.Model):
     descripcion = models.TextField(default='Sin especificar')
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     metros_cuadrados = models.IntegerField()
-    imagen_url = models.CharField(max_length=255)
-    imagenes_urls = models.JSONField(default=list, blank=True)  # Almacena múltiples URLs de imágenes
+    imagen_url = CloudinaryField('imagen', folder='propiedades/main', blank=True)  # Cambiado a CloudinaryField
+    imagenes_urls = models.JSONField(default=list, blank=True)
     cuartos = models.IntegerField(default=1)
     banos = models.IntegerField(default=1)
     habitacion = models.IntegerField(default=1)
@@ -29,5 +29,5 @@ class Terrenos(models.Model):
     descripcion2 = models.TextField(default='Sin especificar')
     precio2 = models.DecimalField(max_digits=10, decimal_places=2)
     metros_cuadrados2 = models.IntegerField()
-    imagen_url2 = models.CharField(max_length=255)
-    imagenes_urls2 = models.JSONField(default=list, blank=True)  # Almacena múltiples URLs de imágenes
+    imagen_url2 = CloudinaryField('imagen', folder='terrenos/main', blank=True)  # Cambiado a CloudinaryField
+    imagenes_urls2 = models.JSONField(default=list, blank=True)
