@@ -273,7 +273,7 @@ def editar_propiedad(request, id):
             if 'imagen_url' in form.changed_data:
                 old_image = form.initial.get('imagen_url')
                 if old_image:
-                    old_image.delete()  # Eliminar vieja imagen de Cloudinary
+                    eliminar_imagen('imagen_url')  # Eliminar vieja imagen de Cloudinary
 
             # Manejar imágenes adicionales
             nuevas_urls = []
